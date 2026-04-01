@@ -4,6 +4,22 @@ Argument Atlas IELTS is a lightweight web app for IELTS Task 2 brainstorming.
 It helps learners turn a prompt into a clearer argument map before they start
 writing.
 
+## Snapshot
+
+![Argument Atlas IELTS demo](./assets/argument-atlas-demo.png)
+
+## What it solves
+
+IELTS learners often struggle before grammar becomes the main problem. They
+freeze at the planning stage:
+
+- they cannot quickly see both sides of an argument
+- they repeat one weak idea in different words
+- they drift away from the exact task wording
+- they know what they think, but cannot turn it into a usable thesis
+
+Argument Atlas IELTS is designed to solve that narrow planning problem first.
+
 ## What the current version does
 
 - Detects the likely IELTS Task 2 question type
@@ -31,6 +47,18 @@ This first version has no build step and no dependency installation.
 2. Paste an IELTS Task 2 prompt.
 3. Click `Generate argument map`.
 
+## Product direction
+
+This project is intentionally not a full IELTS platform. It focuses on one
+specific moment in the writing workflow:
+
+- understanding the exact task type
+- deciding how to position the thesis
+- planning two strong body paragraphs
+- spotting off-topic risks before drafting
+
+That makes it easier to keep the scope small, useful, and maintainable.
+
 ## Current positioning
 
 This is intentionally not a full IELTS platform. It is a focused planning tool
@@ -41,6 +69,12 @@ for one narrow but painful part of IELTS Writing Task 2:
 - spotting where essays drift off-task
 - turning raw ideas into a usable body paragraph plan
 
+## Current stack
+
+- HTML
+- CSS
+- Vanilla JavaScript
+
 ## Next ideas
 
 - Add more topic libraries for environment, health, crime, culture, and media
@@ -49,9 +83,3 @@ for one narrow but painful part of IELTS Writing Task 2:
 - Add topic sentence suggestions
 - Add sample thesis statements and paragraph structures
 - Connect an AI model for more prompt-specific argument generation
-
-## Tech
-
-- HTML
-- CSS
-- Vanilla JavaScript
