@@ -10,6 +10,7 @@ writing.
 - Generates supporting arguments
 - Generates opposing arguments
 - Suggests compromise or nuanced thesis angles
+- Provides thesis sentence suggestions based on task type and chosen stance
 - Offers example directions
 - Flags common off-topic traps
 - Recommends a thesis direction based on the task type and chosen focus mode
@@ -45,7 +46,7 @@ for one narrow but painful part of IELTS Writing Task 2:
 - Add more topic libraries for environment, health, crime, culture, and media
 - Support more precise handling for problem-solution and two-part questions
 - Let users export Markdown or copy a full essay plan
-- Add a thesis sentence generator and topic sentence generator
+- Add topic sentence suggestions
 - Add sample thesis statements and paragraph structures
 - Connect an AI model for more prompt-specific argument generation
 

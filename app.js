@@ -248,6 +248,7 @@ const generateButton = document.querySelector("#generate-map");
 const sampleButton = document.querySelector("#load-sample");
 const clearButton = document.querySelector("#clear-form");
 const copyButton = document.querySelector("#copy-result");
+const copyThesisButton = document.querySelector("#copy-thesis");
 const questionTypeLabel = document.querySelector("#question-type");
 const recommendedStance = document.querySelector("#recommended-stance");
 const thesisMove = document.querySelector("#thesis-move");
@@ -255,6 +256,7 @@ const paragraphPath = document.querySelector("#paragraph-path");
 const promptLens = document.querySelector("#prompt-lens");
 const scoreFocus = document.querySelector("#score-focus");
 const sampleChips = document.querySelector("#sample-chips");
+const thesisList = document.querySelector("#thesis-list");
 
 const listTargets = {
   support: document.querySelector("#support-list"),
@@ -451,6 +453,133 @@ function renderList(element, items) {
   });
 }
 
+function buildThesisSuggestions(questionType, focusMode) {
+  const templates = {
+    "Discuss both views + opinion": {
+      balanced: [
+        "Although both sides of this debate raise valid concerns, I believe the stronger argument is the one that delivers the more sustainable long-term outcome.",
+        "This essay will examine both perspectives before explaining why one side is ultimately more convincing in practice.",
+        "While each position has merit, I would argue that the better view is the one that balances practicality with long-term benefit."
+      ],
+      support: [
+        "Although the opposing view deserves consideration, I believe the arguments in favour are more persuasive because their benefits are broader and more lasting.",
+        "After considering both sides, I would argue that the supportive position is stronger because it produces clearer overall advantages.",
+        "While critics raise some valid concerns, I ultimately support this view because its positive outcomes are more significant."
+      ],
+      oppose: [
+        "Although the idea appears attractive at first glance, I believe the opposing view is stronger because its risks are more immediate and serious.",
+        "This essay will consider both sides, but I would argue that the drawbacks make the critical position more convincing overall.",
+        "Despite the potential benefits, I believe the case against this idea is ultimately more persuasive because it reflects real-world consequences more accurately."
+      ]
+    },
+    "Advantages vs disadvantages": {
+      balanced: [
+        "Although this development brings several clear benefits, I believe its disadvantages are slightly more significant overall.",
+        "This essay argues that while both sides deserve attention, the advantages are ultimately more substantial in the long term.",
+        "In my view, the positive effects of this trend outweigh the negative ones, provided it is managed carefully."
+      ],
+      support: [
+        "Although there are some drawbacks, I believe the advantages clearly outweigh them because the long-term gains are more important.",
+        "In my opinion, the benefits are more significant than the disadvantages, mainly because they affect more people in a positive way.",
+        "While the negative aspects should not be ignored, I would argue that the overall impact is more beneficial than harmful."
+      ],
+      oppose: [
+        "Despite a few obvious benefits, I believe the disadvantages are more serious because they create deeper practical and social costs.",
+        "Although this trend may seem positive in some respects, its drawbacks outweigh its benefits overall.",
+        "In my view, the negative consequences are more significant than the advantages, especially when long-term effects are considered."
+      ]
+    },
+    "Advantages and disadvantages": {
+      balanced: [
+        "This issue presents both notable advantages and clear disadvantages, and both should be examined carefully.",
+        "There are convincing arguments on both sides of this development, with meaningful benefits as well as real drawbacks.",
+        "Although this trend offers some valuable opportunities, it also creates serious concerns that deserve equal attention."
+      ],
+      support: [
+        "This development involves both benefits and drawbacks, but the advantages appear more convincing overall.",
+        "Although there are real disadvantages, the positive effects are stronger and more widely felt.",
+        "While both sides deserve discussion, the advantages are ultimately more significant than the disadvantages."
+      ],
+      oppose: [
+        "Although this trend has certain benefits, its disadvantages are more serious and should not be overlooked.",
+        "There are advantages to this development, but the drawbacks are more substantial overall.",
+        "While some positive outcomes are possible, I believe the disadvantages carry greater weight."
+      ]
+    },
+    "Agree or disagree": {
+      balanced: [
+        "I partly agree with this statement because, although it is valid in some situations, it overlooks important practical limitations.",
+        "While I accept the logic behind this view to some extent, I do not believe it is fully convincing in every context.",
+        "I agree with this idea only in part, since its value depends heavily on how it is applied in real life."
+      ],
+      support: [
+        "I largely agree with this statement because its benefits are both practical and long-lasting.",
+        "In my view, this opinion is convincing because it addresses an important real-world need more effectively than the alternatives.",
+        "I agree with this position because the overall advantages clearly outweigh the possible limitations."
+      ],
+      oppose: [
+        "I disagree with this statement because it oversimplifies a more complex issue.",
+        "In my view, this argument is unconvincing because its practical drawbacks are too serious to ignore.",
+        "I do not agree with this opinion, largely because it fails to reflect how people and institutions function in reality."
+      ]
+    },
+    "Problems and solutions": {
+      balanced: [
+        "This problem is driven by several identifiable causes, and it can be reduced through practical, targeted solutions.",
+        "Although this issue is serious, it is not unavoidable, and effective action can still address its main causes.",
+        "This essay argues that the problem stems from clear factors and that realistic intervention can reduce its impact."
+      ],
+      support: [
+        "This issue is serious, but I believe it can be addressed successfully through focused and realistic action.",
+        "Although the problem has become more visible, effective solutions are available if governments and individuals respond early enough.",
+        "In my view, the causes of this issue are clear, and well-designed solutions can make a real difference."
+      ],
+      oppose: [
+        "Although solutions are often proposed for this issue, I believe many of them are too narrow to solve the deeper problem.",
+        "This problem is more complex than it first appears, which is why simple solutions are unlikely to be enough.",
+        "While action is necessary, the most common responses fail to address the underlying causes effectively."
+      ]
+    },
+    "Two-part question": {
+      balanced: [
+        "This essay will first explain the main reasons behind this trend and then suggest the most effective way to respond to it.",
+        "In my view, this issue can be understood by examining why it happens and by identifying the most realistic way to deal with it.",
+        "This topic requires a two-step response: explaining the cause clearly and then evaluating the best solution."
+      ],
+      support: [
+        "The main cause of this trend is clear, and I believe the most practical response is both achievable and effective.",
+        "This essay argues that the reasons behind this issue are largely structural and that a focused solution can address them successfully.",
+        "Although the causes are varied, the strongest response is the one that tackles the most important factor directly."
+      ],
+      oppose: [
+        "Although one explanation may appear obvious, I believe the issue is driven by deeper factors and therefore needs a broader response.",
+        "This trend cannot be explained by a single cause alone, and any effective answer must reflect that complexity.",
+        "While common solutions may seem attractive, they are unlikely to work unless the deeper causes are fully addressed."
+      ]
+    },
+    "Opinion / mixed analysis": {
+      balanced: [
+        "This is a complex issue, but I believe the strongest response is the one that balances practical benefits with long-term consequences.",
+        "Although there are several ways to approach this question, the most convincing position is the one that remains realistic and sustainable.",
+        "In my view, a balanced judgement is needed because the issue involves both clear opportunities and meaningful risks."
+      ],
+      support: [
+        "I believe this development is broadly positive because its practical benefits are more significant than its potential drawbacks.",
+        "In my view, the strongest argument is the supportive one because it leads to wider and more lasting advantages.",
+        "Although some concerns exist, I would argue that the overall impact of this idea is beneficial."
+      ],
+      oppose: [
+        "Although the idea has some appeal, I believe its drawbacks are too serious to ignore.",
+        "In my view, this issue should be approached more cautiously because the risks outweigh the likely gains.",
+        "While the proposal may offer some benefits, I would argue that its negative consequences are ultimately more significant."
+      ]
+    }
+  };
+
+  const bank = templates[questionType] || templates["Opinion / mixed analysis"];
+  return bank[focusMode] || bank.balanced;
+}
+
 function buildOutlineText(prompt, questionType, result) {
   return [
     `Prompt: ${prompt}`,
@@ -485,6 +614,7 @@ function generateArgumentMap() {
   const refined = tweakForQuestionType(questionType, library);
   const result = adjustForStance(refined, stanceSelect.value);
   const strategy = buildStrategy(prompt, questionType, library, stanceSelect.value);
+  const theses = buildThesisSuggestions(questionType, stanceSelect.value);
 
   questionTypeLabel.textContent = `${questionType} · ${library.theme}`;
   recommendedStance.textContent = strategy.stance;
@@ -493,6 +623,7 @@ function generateArgumentMap() {
   promptLens.textContent = strategy.lens;
   scoreFocus.textContent = strategy.score;
 
+  renderList(thesisList, theses);
   renderList(listTargets.support, result.support);
   renderList(listTargets.oppose, result.oppose);
   renderList(listTargets.middle, result.middle);
@@ -500,6 +631,7 @@ function generateArgumentMap() {
   renderList(listTargets.warnings, result.warnings);
 
   copyButton.dataset.outline = buildOutlineText(prompt, questionType, result);
+  copyThesisButton.dataset.theses = theses.join("\n");
 }
 
 async function copyOutline() {
@@ -522,6 +654,26 @@ async function copyOutline() {
   }
 }
 
+async function copyTheses() {
+  const theses = copyThesisButton.dataset.theses;
+  if (!theses) {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(theses);
+    copyThesisButton.textContent = "Copied";
+    window.setTimeout(() => {
+      copyThesisButton.textContent = "Copy theses";
+    }, 1400);
+  } catch (_error) {
+    copyThesisButton.textContent = "Copy failed";
+    window.setTimeout(() => {
+      copyThesisButton.textContent = "Copy theses";
+    }, 1400);
+  }
+}
+
 sampleButton.addEventListener("click", () => {
   const randomPrompt =
     samplePrompts[Math.floor(Math.random() * samplePrompts.length)];
@@ -537,14 +689,17 @@ clearButton.addEventListener("click", () => {
   paragraphPath.textContent = "Use the map below to choose two strong body paragraphs.";
   promptLens.textContent = "The app will detect the main topic and planning lens.";
   scoreFocus.textContent = "Task response guidance will appear here.";
+  thesisList.innerHTML = "<li>Generate a prompt first to see thesis sentence suggestions.</li>";
   Object.values(listTargets).forEach((element) => {
     element.innerHTML = "<li>Start with a prompt to generate ideas.</li>";
   });
   delete copyButton.dataset.outline;
+  delete copyThesisButton.dataset.theses;
 });
 
 generateButton.addEventListener("click", generateArgumentMap);
 copyButton.addEventListener("click", copyOutline);
+copyThesisButton.addEventListener("click", copyTheses);
 
 promptInput.addEventListener("keydown", (event) => {
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {

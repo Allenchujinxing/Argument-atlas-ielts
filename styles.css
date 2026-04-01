@@ -256,6 +256,11 @@ select {
   color: var(--ink);
 }
 
+.small-button {
+  padding: 0.56rem 0.8rem;
+  font-size: 0.9rem;
+}
+
 .ghost-button:hover,
 .ghost-button:focus-visible {
   transform: translateY(-1px);
@@ -352,6 +357,35 @@ select {
   margin: 0;
   line-height: 1.55;
   color: var(--ink);
+}
+
+.thesis-panel {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, var(--ink) 10%);
+  background: color-mix(in srgb, var(--paper-strong) 72%, white);
+}
+
+.thesis-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 0.85rem;
+}
+
+.thesis-heading h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.thesis-list {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
 }
 
 .map-grid {
@@ -487,6 +521,10 @@ button:focus-visible {
 
   .composer-topline {
     align-items: start;
+    flex-direction: column;
+  }
+
+  .thesis-heading {
     flex-direction: column;
   }
 }
