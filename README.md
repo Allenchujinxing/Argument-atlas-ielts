@@ -6,7 +6,7 @@ writing.
 
 ## Snapshot
 
-![Argument Atlas IELTS demo](./assets/argument-atlas-demo.png)
+![Argument Atlas IELTS demo](./argument-atlas-demo.png)
 
 ## What it solves
 
