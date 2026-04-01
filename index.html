@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Argument Atlas IELTS</title>
+    <meta
+      name="description"
+      content="Generate balanced IELTS Task 2 argument maps with supporting views, opposing views, compromise angles, example directions, and off-topic traps."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">IELTS Task 2 Studio</p>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Build a sharper argument before you write a single sentence.</h1>
+            <p class="hero-text">
+              Paste an IELTS Task 2 prompt and get an instant argument map:
+              supporting views, opposing views, compromise angles, example
+              directions, and the traps that usually push essays off-topic.
+            </p>
+            <div class="hero-actions">
+              <button class="ghost-button" id="load-sample" type="button">
+                Try a sample prompt
+              </button>
+              <button class="ghost-button" id="clear-form" type="button">
+                Clear
+              </button>
+            </div>
+          </div>
+          <aside class="hero-note">
+            <p class="note-label">Designed for</p>
+            <ul class="note-list">
+              <li>Brainstorming before writing</li>
+              <li>Task response practice</li>
+              <li>Faster idea expansion under time pressure</li>
+            </ul>
+          </aside>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="composer">
+          <div class="composer-topline">
+            <p class="eyebrow muted">Prompt lab</p>
+            <p class="micro-hint">Press <span>Cmd/Ctrl + Enter</span> to generate instantly.</p>
+          </div>
+          <label class="field-label" for="prompt-input">Essay prompt</label>
+          <textarea
+            id="prompt-input"
+            name="prompt"
+            rows="7"
+            placeholder="Some people think that children should begin learning a foreign language at primary school rather than secondary school. Do the advantages of this outweigh the disadvantages?"
+          ></textarea>
+          <div class="controls">
+            <div class="control-group">
+              <label class="field-label small" for="stance-select"
+                >Focus mode</label
+              >
+              <select id="stance-select" name="stance">
+                <option value="balanced">Balanced map</option>
+                <option value="support">Lean supportive</option>
+                <option value="oppose">Lean critical</option>
+              </select>
+            </div>
+            <button class="primary-button" id="generate-map" type="button">
+              Generate argument map
+            </button>
+          </div>
+          <div class="sample-strip">
+            <p class="field-label small">Starter prompts</p>
+            <div class="sample-chips" id="sample-chips"></div>
+          </div>
+        </section>
+
+        <section class="result-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow muted">Output</p>
+              <h2>Your argument map</h2>
+            </div>
+            <button class="ghost-button" id="copy-result" type="button">
+              Copy outline
+            </button>
+          </div>
+
+          <div class="result-summary" id="result-summary">
+            <p class="summary-kicker">Detected question type</p>
+            <p class="summary-value" id="question-type">Waiting for a prompt</p>
+          </div>
+
+          <div class="strategy-grid">
+            <article class="strategy-card">
+              <p class="summary-kicker">Recommended stance</p>
+              <p class="strategy-value" id="recommended-stance">Generate a prompt first</p>
+            </article>
+            <article class="strategy-card">
+              <p class="summary-kicker">Suggested thesis move</p>
+              <p class="strategy-value" id="thesis-move">Your thesis framing will appear here.</p>
+            </article>
+            <article class="strategy-card strategy-card-wide">
+              <p class="summary-kicker">Body paragraph path</p>
+              <p class="strategy-value" id="paragraph-path">Use the map below to choose two strong body paragraphs.</p>
+            </article>
+          </div>
+
+          <div class="map-grid" id="map-grid">
+            <article class="map-card tone-support">
+              <h3>Supporting side</h3>
+              <ul id="support-list">
+                <li>Paste a prompt to generate focused supporting ideas.</li>
+              </ul>
+            </article>
+
+            <article class="map-card tone-oppose">
+              <h3>Opposing side</h3>
+              <ul id="oppose-list">
+                <li>Balanced counterarguments will appear here.</li>
+              </ul>
+            </article>
+
+            <article class="map-card tone-middle">
+              <h3>Compromise angle</h3>
+              <ul id="middle-list">
+                <li>Use this section to build nuanced thesis statements.</li>
+              </ul>
+            </article>
+
+            <article class="map-card tone-example">
+              <h3>Example directions</h3>
+              <ul id="example-list">
+                <li>Concrete example paths will show up here.</li>
+              </ul>
+            </article>
+
+            <article class="map-card tone-warning map-card-wide">
+              <h3>Off-topic traps</h3>
+              <ul id="warning-list">
+                <li>Common Task Response mistakes will appear here.</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="insight-band">
+            <article class="insight-card">
+              <p class="summary-kicker">Prompt lens</p>
+              <p id="prompt-lens">The app will detect the main topic and planning lens.</p>
+            </article>
+            <article class="insight-card">
+              <p class="summary-kicker">Score focus</p>
+              <p id="score-focus">Task response guidance will appear here.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
