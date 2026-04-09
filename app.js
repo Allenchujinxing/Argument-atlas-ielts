@@ -249,25 +249,65 @@ const sampleButton = document.querySelector("#load-sample");
 const clearButton = document.querySelector("#clear-form");
 const copyButton = document.querySelector("#copy-result");
 const copyThesisButton = document.querySelector("#copy-thesis");
+const copyConnectorsButton = document.querySelector("#copy-connectors");
+const promptStatus = document.querySelector("#prompt-status");
+const promptMeta = document.querySelector("#prompt-meta");
 const questionTypeLabel = document.querySelector("#question-type");
+const resultStatus = document.querySelector("#result-status");
 const recommendedStance = document.querySelector("#recommended-stance");
 const thesisMove = document.querySelector("#thesis-move");
 const paragraphPath = document.querySelector("#paragraph-path");
-const promptLens = document.querySelector("#prompt-lens");
 const scoreFocus = document.querySelector("#score-focus");
 const sampleChips = document.querySelector("#sample-chips");
 const thesisList = document.querySelector("#thesis-list");
-
-const listTargets = {
-  support: document.querySelector("#support-list"),
-  oppose: document.querySelector("#oppose-list"),
-  middle: document.querySelector("#middle-list"),
-  examples: document.querySelector("#example-list"),
-  warnings: document.querySelector("#warning-list")
-};
+const structureList = document.querySelector("#structure-list");
+const introList = document.querySelector("#intro-list");
+const conclusionList = document.querySelector("#conclusion-list");
+const stanceReasonList = document.querySelector("#stance-reasons");
+const evidenceList = document.querySelector("#evidence-list");
+const linkingList = document.querySelector("#linking-list");
+const paragraphOneTopic = document.querySelector("#p1-topic");
+const paragraphOneExplain = document.querySelector("#p1-explain");
+const paragraphOneResult = document.querySelector("#p1-result");
+const paragraphOneExample = document.querySelector("#p1-example");
+const paragraphOneSentence = document.querySelector("#p1-sentence");
+const paragraphTwoTopic = document.querySelector("#p2-topic");
+const paragraphTwoExplain = document.querySelector("#p2-explain");
+const paragraphTwoResult = document.querySelector("#p2-result");
+const paragraphTwoExample = document.querySelector("#p2-example");
+const paragraphTwoSentence = document.querySelector("#p2-sentence");
+const warningList = document.querySelector("#warning-list");
+const tabButtons = document.querySelectorAll("[data-tab-target]");
+const tabPanels = document.querySelectorAll(".tab-panel");
 
 function normalizePrompt(prompt) {
   return prompt.trim().replace(/\s+/g, " ");
+}
+
+function updatePromptAssistant(rawPrompt) {
+  const prompt = normalizePrompt(rawPrompt);
+  const wordCount = prompt ? prompt.split(/\s+/).length : 0;
+
+  if (!prompt) {
+    promptStatus.textContent = "Paste the full IELTS Task 2 question so the plan can match the real task wording.";
+    promptMeta.textContent = "0 words · not enough detail yet";
+    return;
+  }
+
+  if (wordCount < 8) {
+    promptStatus.textContent = "This looks too short. Try the full question instead of only the topic.";
+    promptMeta.textContent = `${wordCount} words · likely too vague for a useful essay plan`;
+    return;
+  }
+
+  if (!prompt.includes("?") && !prompt.toLowerCase().includes("discuss both views")) {
+    promptStatus.textContent = "This may be incomplete. A full Task 2 question usually includes a task instruction or a clear essay prompt.";
+    promptMeta.textContent = `${wordCount} words · workable, but the output may stay generic`;
+    return;
+  }
+
+  promptStatus.textContent = "This looks like a full exam-style prompt. Generate when you're ready.";
+  promptMeta.textContent = `${wordCount} words · enough detail for a focused writing plan`;
 }
 
 function detectQuestionType(prompt) {
@@ -444,6 +484,92 @@ function buildStrategy(prompt, questionType, library, focusMode) {
   };
 }
 
+function buildWhyStanceWorks(questionType, library, focusMode) {
+  const base = [
+    `This task belongs to the ${library.theme} theme, so the strongest essay usually turns abstract opinion into a concrete social consequence.`,
+    "A safer high-band response normally picks two body paragraphs that are easy to explain, support, and compare."
+  ];
+
+  const questionTypeReason = {
+    "Discuss both views + opinion":
+      "Because the task requires both views, this answer works best when you compare both sides fairly and still give a decisive final judgement.",
+    "Advantages vs disadvantages":
+      "Because the examiner is listening for comparison, this route works when one key benefit and one key drawback are weighed directly.",
+    "Advantages and disadvantages":
+      "Because this is an evaluation task, the response sounds stronger when benefits and drawbacks are grouped clearly rather than mixed together.",
+    "Agree or disagree":
+      "Because clarity matters most here, a line that is firm but not extreme is usually easier to defend than a vague middle position.",
+    "Problems and solutions":
+      "Because this task rewards practicality, the plan works best when each solution clearly answers a named cause or problem.",
+    "Two-part question":
+      "Because the prompt contains two separate promises, the safest structure is one paragraph for each task part.",
+    "Opinion / mixed analysis":
+      "Because the wording is broad, the essay becomes stronger when you choose one defendable angle instead of trying to cover everything."
+  };
+
+  const focusReason = {
+    balanced:
+      "Balanced mode keeps the essay mature and safe: you still sound nuanced, but your final position stays visible.",
+    support:
+      "Support mode is strongest when the prompt gives you an easy positive mechanism to explain and an example that feels natural.",
+    oppose:
+      "Critical mode works best when the hidden risks are easier to prove than the benefits are to justify."
+  };
+
+  return [
+    ...base,
+    questionTypeReason[questionType] || questionTypeReason["Opinion / mixed analysis"],
+    focusReason[focusMode]
+  ];
+}
+
+function buildIntroductionKit(questionType, library, focusMode) {
+  const opener = `Open by reframing the issue as a debate about ${library.theme}, not by copying the question wording.`;
+
+  const bridge = {
+    "Discuss both views + opinion": "Then signal that both views deserve attention before you reveal which side you finally support.",
+    "Advantages vs disadvantages": "Then set up the comparison by naming the strongest gain and the most serious cost.",
+    "Advantages and disadvantages": "Then show that your essay will examine both the opportunities and the drawbacks in turn.",
+    "Agree or disagree": "Then move quickly to your degree of agreement so the examiner hears your position in the introduction.",
+    "Problems and solutions": "Then identify the issue as serious but solvable, so the reader expects both diagnosis and response.",
+    "Two-part question": "Then tell the reader clearly that both task parts will be answered, not just discussed generally.",
+    "Opinion / mixed analysis": "Then define the specific angle you will defend, so the essay feels controlled from the start."
+  };
+
+  const thesisLead = {
+    balanced: "Finish the introduction with a balanced thesis that leans clearly one way.",
+    support: "Finish with a thesis that admits one limitation but clearly backs the stronger positive outcome.",
+    oppose: "Finish with a thesis that acknowledges the appeal of the idea before explaining why the risk matters more."
+  };
+
+  return [opener, bridge[questionType] || bridge["Opinion / mixed analysis"], thesisLead[focusMode]];
+}
+
+function buildConclusionKit(questionType, focusMode) {
+  const lines = [
+    "Restate your overall judgement in fresher language instead of repeating the thesis word for word.",
+    "Summarise the main weighing logic in one sentence so the conclusion sounds evaluative, not mechanical."
+  ];
+
+  if (questionType === "Two-part question") {
+    lines.push("Close by linking both task parts together so the answer feels complete.");
+  } else if (questionType === "Problems and solutions") {
+    lines.push("End on the most workable response rather than introducing a new problem.");
+  } else {
+    lines.push("Avoid new examples here; use the conclusion only to reinforce your line.");
+  }
+
+  if (focusMode === "support") {
+    lines.push("Let the final sentence land on the strongest benefit so the ending feels confident.");
+  }
+
+  if (focusMode === "oppose") {
+    lines.push("Let the final sentence land on the biggest practical risk so the judgement stays firm.");
+  }
+
+  return lines;
+}
+
 function renderList(element, items) {
   element.innerHTML = "";
   items.forEach((item) => {
@@ -585,21 +711,190 @@ function buildOutlineText(prompt, questionType, result) {
     `Prompt: ${prompt}`,
     `Question type: ${questionType}`,
     "",
-    "Supporting side:",
-    ...result.support.map((item) => `- ${item}`),
+    "Why this stance works:",
+    ...(stanceReasonList ? [...stanceReasonList.querySelectorAll("li")].map((item) => `- ${item.textContent}`) : []),
     "",
-    "Opposing side:",
-    ...result.oppose.map((item) => `- ${item}`),
+    "Essay structure:",
+    ...(structureList ? [...structureList.querySelectorAll("li")].map((item) => `- ${item.textContent}`) : []),
     "",
-    "Compromise angle:",
-    ...result.middle.map((item) => `- ${item}`),
+    "Introduction builder:",
+    ...(introList ? [...introList.querySelectorAll("li")].map((item) => `- ${item.textContent}`) : []),
     "",
-    "Example directions:",
-    ...result.examples.map((item) => `- ${item}`),
+    "Thesis suggestions:",
+    ...(thesisList ? [...thesisList.querySelectorAll("li")].map((item) => `- ${item.textContent}`) : []),
+    "",
+    "Paragraph 1 builder:",
+    `- Topic sentence: ${paragraphOneTopic?.textContent || ""}`,
+    `- Why it matters: ${paragraphOneExplain?.textContent || ""}`,
+    `- What it leads to: ${paragraphOneResult?.textContent || ""}`,
+    `- Example direction: ${paragraphOneExample?.textContent || ""}`,
+    `- Sentence starter: ${paragraphOneSentence?.textContent || ""}`,
+    "",
+    "Paragraph 2 builder:",
+    `- Topic sentence: ${paragraphTwoTopic?.textContent || ""}`,
+    `- Why it matters: ${paragraphTwoExplain?.textContent || ""}`,
+    `- What it leads to: ${paragraphTwoResult?.textContent || ""}`,
+    `- Example direction: ${paragraphTwoExample?.textContent || ""}`,
+    `- Sentence starter: ${paragraphTwoSentence?.textContent || ""}`,
+    "",
+    "Useful language:",
+    ...(linkingList ? [...linkingList.querySelectorAll("li")].map((item) => `- ${item.textContent}`) : []),
+    "",
+    "Evidence directions:",
+    ...(evidenceList ? [...evidenceList.querySelectorAll("li")].map((item) => `- ${item.textContent}`) : []),
+    "",
+    "Conclusion move:",
+    ...(conclusionList ? [...conclusionList.querySelectorAll("li")].map((item) => `- ${item.textContent}`) : []),
     "",
     "Off-topic traps:",
-    ...result.warnings.map((item) => `- ${item}`)
+    ...(warningList ? [...warningList.querySelectorAll("li")].map((item) => `- ${item.textContent}`) : [])
   ].join("\n");
+}
+
+function buildEssayStructure(questionType, focusMode) {
+  const structures = {
+    "Discuss both views + opinion": [
+      "Introduction: paraphrase the prompt and state that both views will be examined.",
+      "Body paragraph 1: explain the strongest argument for the first side with one concrete illustration.",
+      "Body paragraph 2: explain the strongest argument for the opposite side, then show which side you find more convincing.",
+      "Conclusion: restate your final opinion in a direct and comparative way."
+    ],
+    "Advantages vs disadvantages": [
+      "Introduction: paraphrase the topic and make your overall judgement clear.",
+      "Body paragraph 1: explain the strongest advantage with a specific impact.",
+      "Body paragraph 2: explain the main disadvantage, then weigh it against the benefit if needed.",
+      "Conclusion: answer clearly whether the advantages outweigh the disadvantages."
+    ],
+    "Advantages and disadvantages": [
+      "Introduction: show that both positive and negative aspects will be discussed.",
+      "Body paragraph 1: cover the most important advantages in one logical cluster.",
+      "Body paragraph 2: cover the most important disadvantages in one logical cluster.",
+      "Conclusion: summarise both sides and optionally signal which side feels more significant."
+    ],
+    "Agree or disagree": [
+      "Introduction: paraphrase the statement and state your position clearly.",
+      "Body paragraph 1: present your strongest reason for agreeing or disagreeing.",
+      "Body paragraph 2: add a second reason or acknowledge the main counterpoint before rebutting it.",
+      "Conclusion: restate your position without introducing a new idea."
+    ],
+    "Problems and solutions": [
+      "Introduction: introduce the issue and signal that both the problem and response will be addressed.",
+      "Body paragraph 1: explain the main problem or cause with one concrete consequence.",
+      "Body paragraph 2: present one or two realistic solutions connected directly to that problem.",
+      "Conclusion: summarise the issue and reinforce which solution is most workable."
+    ],
+    "Two-part question": [
+      "Introduction: paraphrase the topic and signal that both questions will be answered.",
+      "Body paragraph 1: answer the first question directly and fully.",
+      "Body paragraph 2: answer the second question with equal detail and clear logic.",
+      "Conclusion: briefly combine both answers into one final takeaway."
+    ],
+    "Opinion / mixed analysis": [
+      "Introduction: paraphrase the issue and make your overall line clear.",
+      "Body paragraph 1: explain your main argument with one developed example.",
+      "Body paragraph 2: add a second argument or address the main limitation.",
+      "Conclusion: summarise your reasoning and restate the final position clearly."
+    ]
+  };
+
+  const base = structures[questionType] || structures["Opinion / mixed analysis"];
+  if (focusMode === "support") {
+    return [...base, "Keep the more positive or supportive point first so your essay direction feels confident."];
+  }
+
+  if (focusMode === "oppose") {
+    return [...base, "Lead with the most serious risk or limitation so the reader understands your critical stance early."];
+  }
+
+  return base;
+}
+
+function buildEvidenceDirections(questionType, library) {
+  const starter = {
+    "Discuss both views + opinion": "Use one example for each side so the comparison feels fair before you give your own judgement.",
+    "Advantages vs disadvantages": "Choose evidence that makes comparison easy, such as cost vs benefit, speed vs risk, or short term vs long term.",
+    "Advantages and disadvantages": "Pick one evidence angle for each side instead of listing many shallow points.",
+    "Agree or disagree": "Use an example that directly proves your position instead of giving general background.",
+    "Problems and solutions": "Pair each solution with an example that shows how it would work in real life.",
+    "Two-part question": "Use one example to explain the cause and another to support the response or consequence.",
+    "Opinion / mixed analysis": "Use examples that make your overall judgement feel practical, not abstract."
+  };
+
+  return [
+    starter[questionType] || starter["Opinion / mixed analysis"],
+    ...library.examples
+  ];
+}
+
+function buildLinkingPhrases(questionType, focusMode) {
+  const opening = ["To begin with,", "One important point is that,", "A clear advantage is that,"];
+  const contrast = ["However,", "By contrast,", "On the other hand,"];
+  const balance = ["That said,", "Even so,", "At the same time,"];
+  const example = ["For example,", "A good illustration of this is that,", "This can be seen in cases where"];
+  const conclusion = ["Overall,", "In conclusion,", "Taking everything into account,"];
+
+  const sets = {
+    support: [...opening, ...example, ...conclusion],
+    oppose: [...contrast, ...balance, ...conclusion],
+    balanced: [...opening, ...contrast, ...balance, ...example, ...conclusion]
+  };
+
+  const questionExtras = {
+    "Discuss both views + opinion": ["Those who support this view argue that,", "By comparison, critics point out that,"],
+    "Advantages vs disadvantages": ["The main benefit is that,", "The biggest drawback, however, is that,"],
+    "Advantages and disadvantages": ["One clear advantage is that,", "A possible disadvantage, however, is that,"],
+    "Agree or disagree": ["I would argue that,", "The strongest reason for this is that,"],
+    "Problems and solutions": ["One major cause is that,", "A practical solution would be to,"],
+    "Two-part question": ["One reason for this is that,", "A sensible way to address this would be to,"],
+    "Opinion / mixed analysis": ["From my perspective,", "A more convincing argument is that,"]
+  };
+
+  return [...sets[focusMode], ...(questionExtras[questionType] || [])];
+}
+
+function buildParagraphBuilders(questionType, result, focusMode) {
+  const firstAngle =
+    focusMode === "oppose" ? result.oppose[0] : result.support[0];
+  const secondAngle =
+    focusMode === "support" ? result.oppose[0] : result.middle[0] || result.oppose[0];
+  const firstExample = result.examples[0];
+  const secondExample = result.examples[1] || result.examples[0];
+
+  const paragraphOne = {
+    topic: firstAngle || "Generate a prompt first to see a paragraph idea.",
+    explain:
+      questionType === "Discuss both views + opinion"
+        ? "Explain why this side sounds persuasive in real life, not just in theory."
+        : "Develop the point by showing why it matters for people, systems, or long-term outcomes.",
+    result:
+      focusMode === "oppose"
+        ? "Show the concrete risk, cost, or limitation that follows if this issue is ignored."
+        : "Show the positive result, practical gain, or wider social impact that follows from this point.",
+    example: firstExample || "A safe example direction will appear here.",
+    sentenceStarter:
+      focusMode === "oppose"
+        ? "One major concern is that..."
+        : "A strong reason in favour of this view is that..."
+  };
+
+  const paragraphTwo = {
+    topic: secondAngle || "Generate a prompt first to see a second paragraph path.",
+    explain:
+      questionType === "Agree or disagree"
+        ? "Use this paragraph either to strengthen your position or to acknowledge the main counterpoint before rebutting it."
+        : "Use this paragraph to balance, compare, or qualify the first body paragraph.",
+    result:
+      focusMode === "support"
+        ? "Use the ending of this paragraph to show why the limitation does not defeat your overall view."
+        : "Use the ending of this paragraph to reinforce your final judgement and make the weighing explicit.",
+    example: secondExample || "A second evidence direction will appear here.",
+    sentenceStarter:
+      focusMode === "support"
+        ? "Admittedly, opponents may argue that..."
+        : "Another point worth considering is that..."
+  };
+
+  return { paragraphOne, paragraphTwo };
 }
 
 function generateArgumentMap() {
@@ -615,23 +910,44 @@ function generateArgumentMap() {
   const result = adjustForStance(refined, stanceSelect.value);
   const strategy = buildStrategy(prompt, questionType, library, stanceSelect.value);
   const theses = buildThesisSuggestions(questionType, stanceSelect.value);
+  const structure = buildEssayStructure(questionType, stanceSelect.value);
+  const evidence = buildEvidenceDirections(questionType, library);
+  const linking = buildLinkingPhrases(questionType, stanceSelect.value);
+  const builders = buildParagraphBuilders(questionType, result, stanceSelect.value);
+  const whyStanceWorks = buildWhyStanceWorks(questionType, library, stanceSelect.value);
+  const intro = buildIntroductionKit(questionType, library, stanceSelect.value);
+  const conclusion = buildConclusionKit(questionType, stanceSelect.value);
 
   questionTypeLabel.textContent = `${questionType} · ${library.theme}`;
+  resultStatus.textContent = "Plan ready. Use the tabs to move from strategy to introduction, body paragraphs, and language support.";
   recommendedStance.textContent = strategy.stance;
   thesisMove.textContent = strategy.thesis;
   paragraphPath.textContent = strategy.path;
-  promptLens.textContent = strategy.lens;
   scoreFocus.textContent = strategy.score;
 
+  renderList(stanceReasonList, whyStanceWorks);
+  renderList(structureList, structure);
+  renderList(introList, intro);
+  renderList(conclusionList, conclusion);
+  renderList(evidenceList, evidence);
+  renderList(linkingList, linking);
   renderList(thesisList, theses);
-  renderList(listTargets.support, result.support);
-  renderList(listTargets.oppose, result.oppose);
-  renderList(listTargets.middle, result.middle);
-  renderList(listTargets.examples, result.examples);
-  renderList(listTargets.warnings, result.warnings);
+  renderList(warningList, result.warnings);
+
+  paragraphOneTopic.textContent = builders.paragraphOne.topic;
+  paragraphOneExplain.textContent = builders.paragraphOne.explain;
+  paragraphOneResult.textContent = builders.paragraphOne.result;
+  paragraphOneExample.textContent = builders.paragraphOne.example;
+  paragraphOneSentence.textContent = builders.paragraphOne.sentenceStarter;
+  paragraphTwoTopic.textContent = builders.paragraphTwo.topic;
+  paragraphTwoExplain.textContent = builders.paragraphTwo.explain;
+  paragraphTwoResult.textContent = builders.paragraphTwo.result;
+  paragraphTwoExample.textContent = builders.paragraphTwo.example;
+  paragraphTwoSentence.textContent = builders.paragraphTwo.sentenceStarter;
 
   copyButton.dataset.outline = buildOutlineText(prompt, questionType, result);
   copyThesisButton.dataset.theses = theses.join("\n");
+  copyConnectorsButton.dataset.connectors = linking.join("\n");
 }
 
 async function copyOutline() {
@@ -674,37 +990,79 @@ async function copyTheses() {
   }
 }
 
+async function copyConnectors() {
+  const connectors = copyConnectorsButton.dataset.connectors;
+  if (!connectors) {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(connectors);
+    copyConnectorsButton.textContent = "Copied";
+    window.setTimeout(() => {
+      copyConnectorsButton.textContent = "Copy phrases";
+    }, 1400);
+  } catch (_error) {
+    copyConnectorsButton.textContent = "Copy failed";
+    window.setTimeout(() => {
+      copyConnectorsButton.textContent = "Copy phrases";
+    }, 1400);
+  }
+}
+
 sampleButton.addEventListener("click", () => {
   const randomPrompt =
     samplePrompts[Math.floor(Math.random() * samplePrompts.length)];
   promptInput.value = randomPrompt;
+  updatePromptAssistant(randomPrompt);
   generateArgumentMap();
 });
 
 clearButton.addEventListener("click", () => {
   promptInput.value = "";
+  updatePromptAssistant("");
   questionTypeLabel.textContent = "Waiting for a prompt";
+  resultStatus.textContent = "Your writing plan will appear here after you generate one.";
   recommendedStance.textContent = "Generate a prompt first";
   thesisMove.textContent = "Your thesis framing will appear here.";
   paragraphPath.textContent = "Use the map below to choose two strong body paragraphs.";
-  promptLens.textContent = "The app will detect the main topic and planning lens.";
   scoreFocus.textContent = "Task response guidance will appear here.";
+  stanceReasonList.innerHTML = "<li>Generate a prompt first to see why this position is easier to defend.</li>";
+  structureList.innerHTML = "<li>Generate a prompt first to see a suggested structure.</li>";
+  introList.innerHTML = "<li>Generate a prompt first to see an introduction plan.</li>";
+  conclusionList.innerHTML = "<li>Generate a prompt first to see a safe conclusion strategy.</li>";
+  evidenceList.innerHTML = "<li>Generate a prompt first to see more usable evidence ideas.</li>";
+  linkingList.innerHTML = "<li>Generate a prompt first to see linking phrase suggestions.</li>";
   thesisList.innerHTML = "<li>Generate a prompt first to see thesis sentence suggestions.</li>";
-  Object.values(listTargets).forEach((element) => {
-    element.innerHTML = "<li>Start with a prompt to generate ideas.</li>";
-  });
+  warningList.innerHTML = "<li>Common Task Response mistakes will appear here.</li>";
+  paragraphOneTopic.textContent = "Generate a prompt first to see a paragraph idea.";
+  paragraphOneExplain.textContent = "A short explanation path will appear here.";
+  paragraphOneResult.textContent = "This area will show the likely effect or consequence.";
+  paragraphOneExample.textContent = "You will get a safe evidence angle to develop.";
+  paragraphOneSentence.textContent = "Generate a prompt first to see a sentence starter.";
+  paragraphTwoTopic.textContent = "Generate a prompt first to see a paragraph idea.";
+  paragraphTwoExplain.textContent = "A short explanation path will appear here.";
+  paragraphTwoResult.textContent = "This area will show the likely effect or consequence.";
+  paragraphTwoExample.textContent = "You will get a safe evidence angle to develop.";
+  paragraphTwoSentence.textContent = "Generate a prompt first to see a sentence starter.";
   delete copyButton.dataset.outline;
   delete copyThesisButton.dataset.theses;
+  delete copyConnectorsButton.dataset.connectors;
 });
 
 generateButton.addEventListener("click", generateArgumentMap);
 copyButton.addEventListener("click", copyOutline);
 copyThesisButton.addEventListener("click", copyTheses);
+copyConnectorsButton.addEventListener("click", copyConnectors);
 
 promptInput.addEventListener("keydown", (event) => {
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
     generateArgumentMap();
   }
+});
+
+promptInput.addEventListener("input", () => {
+  updatePromptAssistant(promptInput.value);
 });
 
 samplePrompts.forEach((prompt, index) => {
@@ -714,7 +1072,35 @@ samplePrompts.forEach((prompt, index) => {
   chip.textContent = `Sample ${index + 1}`;
   chip.addEventListener("click", () => {
     promptInput.value = prompt;
+    updatePromptAssistant(prompt);
     generateArgumentMap();
   });
   sampleChips.appendChild(chip);
+});
+
+updatePromptAssistant(promptInput.value);
+
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const targetId = button.dataset.tabTarget;
+
+    tabButtons.forEach((item) => {
+      item.classList.remove("is-active");
+      item.setAttribute("aria-selected", "false");
+    });
+
+    tabPanels.forEach((panel) => {
+      panel.hidden = true;
+      panel.classList.remove("is-active");
+    });
+
+    button.classList.add("is-active");
+    button.setAttribute("aria-selected", "true");
+
+    const targetPanel = document.querySelector(`#${targetId}`);
+    if (targetPanel) {
+      targetPanel.hidden = false;
+      targetPanel.classList.add("is-active");
+    }
+  });
 });

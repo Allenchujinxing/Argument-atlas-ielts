@@ -13,32 +13,30 @@
   <body>
     <div class="page-shell">
       <header class="hero">
-        <p class="eyebrow">IELTS Task 2 Studio</p>
-        <div class="hero-grid">
+        <div class="hero-topline">
           <div class="hero-copy">
-            <h1>Build a sharper argument before you write a single sentence.</h1>
+            <p class="eyebrow">IELTS Task 2 Studio</p>
+            <h1>Turn a Task 2 prompt into a writeable essay plan.</h1>
             <p class="hero-text">
-              Paste an IELTS Task 2 prompt and get an instant argument map:
-              supporting views, opposing views, compromise angles, example
-              directions, and the traps that usually push essays off-topic.
+              Start with the exact question. Get a recommended position, a clean
+              essay blueprint, paragraph-by-paragraph idea builders, and the
+              linking language that makes the response flow naturally.
             </p>
-            <div class="hero-actions">
-              <button class="ghost-button" id="load-sample" type="button">
-                Try a sample prompt
-              </button>
-              <button class="ghost-button" id="clear-form" type="button">
-                Clear
-              </button>
-            </div>
           </div>
-          <aside class="hero-note">
-            <p class="note-label">Designed for</p>
-            <ul class="note-list">
-              <li>Brainstorming before writing</li>
-              <li>Task response practice</li>
-              <li>Faster idea expansion under time pressure</li>
-            </ul>
-          </aside>
+          <div class="hero-actions">
+            <button class="ghost-button" id="load-sample" type="button">
+              Try a sample prompt
+            </button>
+            <button class="ghost-button" id="clear-form" type="button">
+              Clear
+            </button>
+          </div>
+        </div>
+        <div class="hero-benefits">
+          <span class="benefit-chip">Best position</span>
+          <span class="benefit-chip">Essay blueprint</span>
+          <span class="benefit-chip">Paragraph builders</span>
+          <span class="benefit-chip">Useful language</span>
         </div>
       </header>
 
@@ -47,6 +45,12 @@
           <div class="composer-topline">
             <label class="field-label composer-title" for="prompt-input">Essay prompt</label>
             <p class="micro-hint">Press <span>Cmd/Ctrl + Enter</span> to generate instantly.</p>
+          </div>
+          <div class="composer-assist">
+            <p class="assist-copy" id="prompt-status">
+              Paste the full IELTS Task 2 question so the plan can match the real task wording.
+            </p>
+            <p class="assist-meta" id="prompt-meta">0 words · not enough detail yet</p>
           </div>
           <textarea
             id="prompt-input"
@@ -66,7 +70,7 @@
               </select>
             </div>
             <button class="primary-button" id="generate-map" type="button">
-              Generate argument map
+              Build essay plan
             </button>
           </div>
           <div class="sample-strip">
@@ -87,86 +91,228 @@
           </div>
 
           <div class="result-summary" id="result-summary">
-            <p class="summary-kicker">Detected question type</p>
+            <p class="summary-kicker">Task diagnosis</p>
             <p class="summary-value" id="question-type">Waiting for a prompt</p>
+            <p class="summary-note" id="result-status">Your writing plan will appear here after you generate one.</p>
           </div>
 
           <div class="strategy-grid">
             <article class="strategy-card">
-              <p class="summary-kicker">Recommended stance</p>
+              <p class="summary-kicker">Best position</p>
               <p class="strategy-value" id="recommended-stance">Generate a prompt first</p>
             </article>
             <article class="strategy-card">
-              <p class="summary-kicker">Suggested thesis move</p>
+              <p class="summary-kicker">Thesis direction</p>
               <p class="strategy-value" id="thesis-move">Your thesis framing will appear here.</p>
             </article>
             <article class="strategy-card strategy-card-wide">
-              <p class="summary-kicker">Body paragraph path</p>
+              <p class="summary-kicker">Essay blueprint</p>
               <p class="strategy-value" id="paragraph-path">Use the map below to choose two strong body paragraphs.</p>
             </article>
           </div>
 
-          <article class="thesis-panel">
-            <div class="thesis-heading">
-              <div>
-                <p class="summary-kicker">Thesis sentence suggestions</p>
-                <h3>Starter lines you can adapt</h3>
-              </div>
-              <button class="ghost-button small-button" id="copy-thesis" type="button">
-                Copy theses
+          <div class="tabs-shell">
+            <div class="tabs-bar" role="tablist" aria-label="Result tabs">
+              <button class="tab-button is-active" id="tab-plan" data-tab-target="panel-plan" role="tab" aria-selected="true" aria-controls="panel-plan" type="button">
+                Plan
+              </button>
+              <button class="tab-button" id="tab-introduction" data-tab-target="panel-introduction" role="tab" aria-selected="false" aria-controls="panel-introduction" type="button">
+                Introduction
+              </button>
+              <button class="tab-button" id="tab-body" data-tab-target="panel-body" role="tab" aria-selected="false" aria-controls="panel-body" type="button">
+                Body
+              </button>
+              <button class="tab-button" id="tab-language" data-tab-target="panel-language" role="tab" aria-selected="false" aria-controls="panel-language" type="button">
+                Language
               </button>
             </div>
-            <ul class="thesis-list" id="thesis-list">
-              <li>Generate a prompt first to see thesis sentence suggestions.</li>
-            </ul>
-          </article>
 
-          <div class="map-grid" id="map-grid">
-            <article class="map-card tone-support">
-              <h3>Supporting side</h3>
-              <ul id="support-list">
-                <li>Paste a prompt to generate focused supporting ideas.</li>
-              </ul>
-            </article>
+            <section class="tab-panel is-active" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan">
+              <div class="writer-grid single-column">
+                <article class="writer-card">
+                  <div class="writer-heading">
+                    <div>
+                      <p class="summary-kicker">Why this stance works</p>
+                      <h3>The safer way to answer this task</h3>
+                    </div>
+                  </div>
+                  <ul class="writer-list" id="stance-reasons">
+                    <li>Generate a prompt first to see why this position is easier to defend.</li>
+                  </ul>
+                </article>
+                <article class="writer-card">
+                  <div class="writer-heading">
+                    <div>
+                      <p class="summary-kicker">Essay blueprint</p>
+                      <h3>How to organise the full response</h3>
+                    </div>
+                  </div>
+                  <ul class="writer-list" id="structure-list">
+                    <li>Generate a prompt first to see a suggested structure.</li>
+                  </ul>
+                </article>
+              </div>
 
-            <article class="map-card tone-oppose">
-              <h3>Opposing side</h3>
-              <ul id="oppose-list">
-                <li>Balanced counterarguments will appear here.</li>
-              </ul>
-            </article>
+              <article class="writer-card">
+                <div class="writer-heading">
+                  <div>
+                    <p class="summary-kicker">Score focus</p>
+                    <h3>What examiners are likely to reward here</h3>
+                  </div>
+                </div>
+                <p class="writer-copy" id="score-focus">Task response guidance will appear here.</p>
+              </article>
+            </section>
 
-            <article class="map-card tone-middle">
-              <h3>Compromise angle</h3>
-              <ul id="middle-list">
-                <li>Use this section to build nuanced thesis statements.</li>
-              </ul>
-            </article>
+            <section class="tab-panel" id="panel-introduction" role="tabpanel" aria-labelledby="tab-introduction" hidden>
+              <article class="thesis-panel">
+                <div class="thesis-heading">
+                  <div>
+                    <p class="summary-kicker">Introduction builder</p>
+                    <h3>Start the essay with a clean opening move</h3>
+                  </div>
+                </div>
+                <ul class="thesis-list" id="intro-list">
+                  <li>Generate a prompt first to see an introduction plan.</li>
+                </ul>
+              </article>
 
-            <article class="map-card tone-example">
-              <h3>Example directions</h3>
-              <ul id="example-list">
-                <li>Concrete example paths will show up here.</li>
-              </ul>
-            </article>
+              <article class="thesis-panel">
+                <div class="thesis-heading">
+                  <div>
+                    <p class="summary-kicker">Thesis sentence suggestions</p>
+                    <h3>Starter lines you can adapt quickly</h3>
+                  </div>
+                  <button class="ghost-button small-button" id="copy-thesis" type="button">
+                    Copy theses
+                  </button>
+                </div>
+                <ul class="thesis-list" id="thesis-list">
+                  <li>Generate a prompt first to see thesis sentence suggestions.</li>
+                </ul>
+              </article>
 
-            <article class="map-card tone-warning map-card-wide">
-              <h3>Off-topic traps</h3>
-              <ul id="warning-list">
-                <li>Common Task Response mistakes will appear here.</li>
-              </ul>
-            </article>
-          </div>
+              <article class="writer-card">
+                <div class="writer-heading">
+                  <div>
+                    <p class="summary-kicker">Conclusion move</p>
+                    <h3>Finish without sounding repetitive</h3>
+                  </div>
+                </div>
+                <ul class="writer-list" id="conclusion-list">
+                  <li>Generate a prompt first to see a safe conclusion strategy.</li>
+                </ul>
+              </article>
+            </section>
 
-          <div class="insight-band">
-            <article class="insight-card">
-              <p class="summary-kicker">Prompt lens</p>
-              <p id="prompt-lens">The app will detect the main topic and planning lens.</p>
-            </article>
-            <article class="insight-card">
-              <p class="summary-kicker">Score focus</p>
-              <p id="score-focus">Task response guidance will appear here.</p>
-            </article>
+            <section class="tab-panel" id="panel-body" role="tabpanel" aria-labelledby="tab-body" hidden>
+              <div class="body-stack">
+                <article class="builder-card tone-support">
+                  <div class="builder-header">
+                    <div>
+                      <p class="summary-kicker">Paragraph 1 builder</p>
+                      <h3>Your first body paragraph</h3>
+                    </div>
+                  </div>
+                  <div class="builder-grid">
+                    <div class="builder-section">
+                      <p class="builder-label">Topic sentence</p>
+                      <p class="builder-copy" id="p1-topic">Generate a prompt first to see a paragraph idea.</p>
+                    </div>
+                    <div class="builder-section">
+                      <p class="builder-label">Why this point matters</p>
+                      <p class="builder-copy" id="p1-explain">A short explanation path will appear here.</p>
+                    </div>
+                    <div class="builder-section">
+                      <p class="builder-label">What it leads to</p>
+                      <p class="builder-copy" id="p1-result">This area will show the likely effect or consequence.</p>
+                    </div>
+                    <div class="builder-section">
+                      <p class="builder-label">Example direction</p>
+                      <p class="builder-copy" id="p1-example">You will get a safe evidence angle to develop.</p>
+                    </div>
+                    <div class="builder-section builder-section-wide">
+                      <p class="builder-label">Sentence starter</p>
+                      <p class="builder-copy" id="p1-sentence">Generate a prompt first to see a sentence starter.</p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="builder-card tone-oppose">
+                  <div class="builder-header">
+                    <div>
+                      <p class="summary-kicker">Paragraph 2 builder</p>
+                      <h3>Your second body paragraph</h3>
+                    </div>
+                  </div>
+                  <div class="builder-grid">
+                    <div class="builder-section">
+                      <p class="builder-label">Topic sentence</p>
+                      <p class="builder-copy" id="p2-topic">Generate a prompt first to see a paragraph idea.</p>
+                    </div>
+                    <div class="builder-section">
+                      <p class="builder-label">Why this point matters</p>
+                      <p class="builder-copy" id="p2-explain">A short explanation path will appear here.</p>
+                    </div>
+                    <div class="builder-section">
+                      <p class="builder-label">What it leads to</p>
+                      <p class="builder-copy" id="p2-result">This area will show the likely effect or consequence.</p>
+                    </div>
+                    <div class="builder-section">
+                      <p class="builder-label">Example direction</p>
+                      <p class="builder-copy" id="p2-example">You will get a safe evidence angle to develop.</p>
+                    </div>
+                    <div class="builder-section builder-section-wide">
+                      <p class="builder-label">Sentence starter</p>
+                      <p class="builder-copy" id="p2-sentence">Generate a prompt first to see a sentence starter.</p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="tab-panel" id="panel-language" role="tabpanel" aria-labelledby="tab-language" hidden>
+              <article class="writer-card">
+                <div class="writer-heading writer-heading-row">
+                  <div>
+                    <p class="summary-kicker">Useful language</p>
+                    <h3>Linking phrases you can actually use</h3>
+                  </div>
+                  <button class="ghost-button small-button" id="copy-connectors" type="button">
+                    Copy phrases
+                  </button>
+                </div>
+                <ul class="writer-list" id="linking-list">
+                  <li>Generate a prompt first to see linking phrase suggestions.</li>
+                </ul>
+              </article>
+
+              <div class="writer-grid">
+                <article class="writer-card">
+                  <div class="writer-heading">
+                    <div>
+                      <p class="summary-kicker">Evidence directions</p>
+                      <h3>Example angles worth developing</h3>
+                    </div>
+                  </div>
+                  <ul class="writer-list" id="evidence-list">
+                    <li>Generate a prompt first to see more usable evidence ideas.</li>
+                  </ul>
+                </article>
+
+                <article class="writer-card">
+                  <div class="writer-heading">
+                    <div>
+                      <p class="summary-kicker">Off-topic checks</p>
+                      <h3>Common ways to lose Task Response marks</h3>
+                    </div>
+                  </div>
+                  <ul class="writer-list" id="warning-list">
+                    <li>Common Task Response mistakes will appear here.</li>
+                  </ul>
+                </article>
+              </div>
+            </section>
           </div>
         </section>
       </main>

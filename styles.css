@@ -52,7 +52,7 @@ textarea {
 .hero {
   position: relative;
   overflow: clip;
-  padding: clamp(1.2rem, 2vw, 1.8rem);
+  padding: 1rem 1.1rem;
   border: 1px solid var(--line);
   background: color-mix(in srgb, var(--paper) 90%, white);
   box-shadow: var(--shadow);
@@ -85,10 +85,10 @@ textarea {
   color: var(--ink-soft);
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 2.3fr 1fr;
-  gap: clamp(1rem, 3vw, 2rem);
+.hero-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
   align-items: start;
 }
 
@@ -101,15 +101,15 @@ textarea {
 }
 
 .hero-copy h1 {
-  max-width: 11ch;
-  font-size: clamp(2.6rem, 6vw, 5.8rem);
+  max-width: 10ch;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
 }
 
 .hero-text {
-  max-width: 58ch;
-  margin: 1.1rem 0 0;
-  font-size: clamp(1rem, 1.5vw, 1.15rem);
-  line-height: 1.7;
+  max-width: 70ch;
+  margin: 0.55rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
   color: var(--ink-soft);
 }
 
@@ -122,31 +122,24 @@ textarea {
 }
 
 .hero-actions {
-  margin-top: 1.4rem;
+  margin-top: 0;
+  flex-shrink: 0;
+  align-self: center;
 }
 
-.hero-note {
-  position: relative;
-  padding: 1rem 1rem 1rem 1.1rem;
-  border-left: 2px solid color-mix(in srgb, var(--accent) 35%, var(--line));
-  background: color-mix(in srgb, var(--paper-strong) 74%, white);
-}
-
-.note-label {
-  margin: 0;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.note-list {
-  margin: 0.8rem 0 0;
-  padding-left: 1rem;
-  display: grid;
+.hero-benefits {
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.55rem;
-  line-height: 1.5;
+  margin-top: 0.9rem;
+}
+
+.benefit-chip {
+  padding: 0.38rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--line) 72%, var(--ink) 10%);
+  background: color-mix(in srgb, var(--paper-strong) 78%, white);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
 }
 
 .workspace {
@@ -169,6 +162,30 @@ textarea {
   align-content: start;
   gap: 0.85rem;
   padding: 1rem;
+}
+
+.composer-assist {
+  display: grid;
+  gap: 0.22rem;
+  padding: 0.78rem 0.9rem;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 42%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 28%, white);
+}
+
+.assist-copy,
+.assist-meta {
+  margin: 0;
+}
+
+.assist-copy {
+  font-size: 0.9rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.assist-meta {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
 }
 
 .composer-topline {
@@ -338,7 +355,8 @@ select {
 }
 
 .summary-kicker,
-.summary-value {
+.summary-value,
+.summary-note {
   margin: 0;
 }
 
@@ -355,11 +373,65 @@ select {
   font-size: 1.25rem;
 }
 
+.summary-note {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
 .strategy-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.9rem;
   margin-bottom: 1rem;
+}
+
+.writer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.writer-grid.single-column {
+  grid-template-columns: 1fr;
+}
+
+.writer-card {
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, var(--ink) 10%);
+  background: color-mix(in srgb, var(--paper-strong) 72%, white);
+}
+
+.writer-copy {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+
+.writer-heading {
+  margin-bottom: 0.75rem;
+}
+
+.writer-heading-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.writer-heading h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.writer-list {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.7rem;
+  color: color-mix(in srgb, var(--ink-soft) 88%, var(--ink) 12%);
+  line-height: 1.6;
 }
 
 .strategy-card {
@@ -376,6 +448,11 @@ select {
   margin: 0;
   line-height: 1.55;
   color: var(--ink);
+}
+
+.strategy-card:first-child {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 34%, white);
 }
 
 .thesis-panel {
@@ -405,6 +482,90 @@ select {
   gap: 0.75rem;
   line-height: 1.6;
   color: var(--ink-soft);
+}
+
+.tabs-shell {
+  margin-bottom: 1rem;
+}
+
+.tabs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 65%, white);
+}
+
+.tab-button {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, var(--ink) 10%);
+  background: color-mix(in srgb, var(--paper-strong) 78%, white);
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tab-button.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: color-mix(in srgb, white 88%, var(--paper) 12%);
+}
+
+.tab-panel[hidden] {
+  display: none;
+}
+
+.body-stack {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.builder-card {
+  padding: 1rem;
+  border-top: 4px solid transparent;
+  background: color-mix(in srgb, var(--paper) 78%, white);
+}
+
+.builder-header {
+  margin-bottom: 0.85rem;
+}
+
+.builder-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.builder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.builder-section {
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, var(--ink) 10%);
+  background: color-mix(in srgb, var(--paper-strong) 74%, white);
+}
+
+.builder-section-wide {
+  grid-column: 1 / -1;
+  background: color-mix(in srgb, var(--accent-soft) 35%, white);
+}
+
+.builder-label {
+  margin: 0 0 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.builder-copy {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--ink);
 }
 
 .map-grid {
@@ -481,6 +642,15 @@ select {
   color: var(--ink-soft);
 }
 
+.insight-list {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.65rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
 textarea:focus-visible,
 select:focus-visible,
 button:focus-visible {
@@ -526,16 +696,26 @@ button:focus-visible {
 }
 
 @media (max-width: 900px) {
-  .hero-grid,
+  .hero-topline,
   .workspace,
   .map-grid,
   .strategy-grid,
-  .insight-band {
+  .insight-band,
+  .writer-grid {
     grid-template-columns: 1fr;
   }
 
   .panel-heading {
     flex-direction: column;
+  }
+
+  .hero-topline {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .builder-grid {
+    grid-template-columns: 1fr;
   }
 
   .composer-topline {
@@ -544,6 +724,10 @@ button:focus-visible {
   }
 
   .thesis-heading {
+    flex-direction: column;
+  }
+
+  .writer-heading-row {
     flex-direction: column;
   }
 }
